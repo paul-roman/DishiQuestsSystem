@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Dishi Quests Designer</title>
+
+	<link href="normalize.min.css" rel="stylesheet">
+	<link href="bootstrap.min.css" rel="stylesheet">
+	<link href="bootstrap-select.min.css" rel="stylesheet">
+
+	<script src="jquery.min.js"></script>
+	<script src="bootstrap.min.js"></script>
+	<script src="bootstrap-select.min.js"></script>
+	<script src="bootstrap-number-input.js"></script>
+	<script src="Designer.js"></script>
+	<script src="Quest.js"></script>
+	<script>
+		var designer;
+	</script>
+</head>
+<body>
+<div id="loader" style="position: fixed; top: 35%; left: 45%;">
+	<img src="ring-alt.gif"></div>
+
+<div class="container" id="before-upload">
+	<div class="jumbotron">
+		<h1>Dishi Quests Designer</h1>
+		<p>
+			Welcome to Dishi Quests System's graphical designer ! All you need to do is browse your Quests.json file
+			and the magic will appear !
+		</p>
+	</div>
+	<label class="control-label">Select File</label>
+	<label class="btn btn-default btn-file">
+		Browse <input id="file" type="file" class="file" style="display: none;">
+	</label>
+</div>
+
+<div id="after-upload">
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Dishi Quests Designer</a>
+			</div>
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					<a href="#">
+						<button type="button" class="btn btn-success btn-lg" style="margin-top:-18px;margin-bottom:-15px;"
+						onclick="designer.writeFile();">
+							Save changes
+						</button>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-4">
+				<div id="left-side">
+					<div class="well well-sm" style="text-align: center;"><h2>Quests</h2></div>
+					<div class="well" style="height: 700px; max-height: 700px;overflow: auto;">
+						<div class="list-group" id="quests_list">
+						</div>
+					</div>
+					<button type="button" class="btn btn-primary btn-lg" style="width: 100%;" data-toggle="modal"
+							data-target="#myModal" onclick="$('#quest_nb').attr('value', designer.quests.length)">
+						Change Max...
+					</button>
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<div id="right-side">
+					<div class="panel panel-default" style="height: 870px;">
+						<div class="panel-body">
+							<input id="quest_id" value="-1" style="display: none;" readonly>
+							<div class="col-sm-8">
+								<label for="quest_name">Quest Name:</label>
+								<input type="text" class="form-control" id="quest_name">
+								<br>
+								<label for="quest_desc">Quest Description:</label>
+								<textarea class="form-control" rows="5" id="quest_desc" style="resize: none;"></textarea>
+							</div>
+							<div class="col-sm-4">
+								<label for="quest_type">Quest Name:</label>
+								<select class="selectpicker" id="quest_type">
+									<option id="type_0">Main</option>
+									<option id="typt_1">Secondary</option>
+								</select>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Change maximum</h4>
+			</div>
+			<div class="modal-body">
+				<b>Maximum:</b>
+				<input id="quest_nb" class="form-control" type="number" value="1" min="1" max="9999">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="designer.changeQuestsNb($('#quest_nb').val());">
+					OK
+				</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+<script>
+	var fileInput = document.querySelector('#file');
+	$('#loader').hide();
+	$('#after-upload').hide();
+
+
+	fileInput.addEventListener('change', function()
+	{
+		var reader = new FileReader();
+		reader.onload = function(e)
+		{
+			designer = new Designer(event.target.result);
+		};
+		reader.readAsText(this.files[0]);
+	});
+
+</script>
+</body>
+</html>

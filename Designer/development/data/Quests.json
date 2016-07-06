@@ -1,0 +1,44 @@
+[
+  {
+	"id":0,
+	"type":0,
+	"name":"Basic tutorial",
+	"giver":"Boris",
+	"location":"The Haunted Woods",
+	"desc":"A local woman was abducted by bandits on the night of her wedding.",
+	"icon":6,
+	"steps":[
+	  ["Search for Ladia", true],
+	  ["Defeat the Orc", false],
+	  ["Get back Ladia to Boris", true]
+	],
+	"rewards":[
+	  ["item",3,1],
+	  ["weapon",1,1],
+	  ["armor",1,1],
+	  ["gold",300,0],
+	  ["xp",100,0]
+	]
+  },
+  {
+	"id":1,
+	"type":0,
+	"name":"Basic tutorial",
+	"giver":"Boris",
+	"location":"The Haunted Woods",
+	"desc":"A local woman was abducted by bandits on the night of her wedding.",
+	"icon":6,
+	"steps":[
+	  ["Search for Ladia", true],
+	  ["Defeat the Orc", false],
+	  ["Get back Ladia to Boris", true]
+	],
+	"rewards":[
+	  ["item",3,1],
+	  ["weapon",1,1],
+	  ["armor",1,1],
+	  ["gold",300,0],
+	  ["xp",100,0]
+	]
+  }
+]
