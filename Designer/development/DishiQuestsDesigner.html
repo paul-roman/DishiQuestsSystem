@@ -6,9 +6,24 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Dishi Quests Designer</title>
 
-	<link href="normalize.min.css" rel="stylesheet">
 	<link href="bootstrap.min.css" rel="stylesheet">
 	<link href="bootstrap-select.min.css" rel="stylesheet">
+	<style>
+		.active_row
+		{
+			z-index: 2;
+			color: #fff;
+			background-color: #337ab7;
+			border-color: #337ab7;
+		}
+		.table-hover>tbody>tr.active_row:hover
+		{
+			z-index: 2;
+			color: #fff;
+			background-color: #337ab7;
+			border-color: #337ab7;
+		}
+	</style>
 
 	<script src="jquery.min.js"></script>
 	<script src="bootstrap.min.js"></script>
@@ -22,7 +37,7 @@
 </head>
 <body>
 <div id="loader" style="position: fixed; top: 35%; left: 45%;">
-	<img src="ring-alt.gif"></div>
+	<img src="http://img15.hostingpics.net/pics/277626ringalt.gif"></div>
 
 <div class="container" id="before-upload">
 	<div class="jumbotron">
@@ -66,7 +81,7 @@
 						</div>
 					</div>
 					<button type="button" class="btn btn-primary btn-lg" style="width: 100%;" data-toggle="modal"
-							data-target="#myModal" onclick="$('#quest_nb').attr('value', designer.quests.length)">
+							data-target="#questsNbModal" onclick="$('#quest_nb').attr('value', designer.quests.length)">
 						Change Max...
 					</button>
 				</div>
@@ -76,20 +91,61 @@
 					<div class="panel panel-default" style="height: 870px;">
 						<div class="panel-body">
 							<input id="quest_id" value="-1" style="display: none;" readonly>
-							<div class="col-sm-8">
-								<label for="quest_name">Quest Name:</label>
-								<input type="text" class="form-control" id="quest_name">
-								<br>
-								<label for="quest_desc">Quest Description:</label>
-								<textarea class="form-control" rows="5" id="quest_desc" style="resize: none;"></textarea>
-							</div>
-							<div class="col-sm-4">
-								<label for="quest_type">Quest Name:</label>
-								<select class="selectpicker" id="quest_type">
-									<option id="type_0">Main</option>
-									<option id="typt_1">Secondary</option>
-								</select>
-
+							<div class="row">
+								<div class="col-sm-8">
+									<label for="quest_name">Quest Name:</label>
+									<input type="text" class="form-control" id="quest_name" disabled>
+									<br>
+									<label for="quest_desc">Quest Description:</label>
+									<textarea class="form-control" rows="5" id="quest_desc" style="resize: none;" disabled></textarea>
+									<br>
+									<b>Quest Objectives:</b>
+									<div style="height: 220px; max-height: 220px; overflow: auto;">
+										<table class="table table-bordered table-hover" id="quest_steps">
+											<thead>
+											<tr>
+												<th class="col-md-8">Name</th>
+												<th>Visible</th>
+											</tr>
+											</thead>
+											<tbody>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<label for="quest_type">Quest Name:</label>
+									<select class="selectpicker" id="quest_type" disabled>
+										<option selected disabled hidden style="display: none;" value="-1"> </option>
+										<option id="type_0" value="0">Main</option>
+										<option id="type_1" value="1">Secondary</option>
+									</select>
+									<br><br>
+									<label for="quest_giver">Quest Giver:</label>
+									<input type="text" class="form-control" id="quest_giver" disabled>
+									<br>
+									<label for="quest_location">Quest Location:</label>
+									<input type="text" class="form-control" id="quest_location" disabled>
+									<br><br>
+									<button type="button" class="btn btn-default btn-sm" id="step_up" onclick="designer.actionStep('up');" disabled>
+										<img src="http://img15.hostingpics.net/pics/43298811up.png" style="width: 30px;">
+									</button>
+									<button type="button" class="btn btn-default btn-sm" id="step_down" onclick="designer.actionStep('down');" disabled>
+										<img src="http://img15.hostingpics.net/pics/556029down.png" style="width: 30px;">
+									</button>
+									<button type="button" class="btn btn-default btn-sm" id="step_edit" data-toggle="modal" data-target="#stepModal"
+									onclick="designer.actionStep('edit')" disabled>
+										<img src="http://img15.hostingpics.net/pics/794462edit.png" style="width: 30px;">
+									</button>
+									<br><br>
+									<button type="button" class="btn btn-default btn-sm" id="step_add" data-toggle="modal" data-target="#stepModal"
+											onclick="designer.actionStep('add')" disabled>
+										<img src="http://img15.hostingpics.net/pics/651338add.png" style="width: 30px;">
+									</button>
+									<button type="button" class="btn btn-default btn-sm" id="step_del" onclick="designer.actionStep('del');" disabled>
+										<img src="http://img15.hostingpics.net/pics/225599bin.png" style="width: 30px;">
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -100,7 +156,7 @@
 	</div>
 </div>
 
-<div id="myModal" class="modal fade" role="dialog">
+<div id="questsNbModal" class="modal fade" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -108,11 +164,36 @@
 				<h4 class="modal-title">Change maximum</h4>
 			</div>
 			<div class="modal-body">
-				<b>Maximum:</b>
+				<label for="quest_nb"><b>Maximum:</b></label>
 				<input id="quest_nb" class="form-control" type="number" value="1" min="1" max="9999">
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="designer.changeQuestsNb($('#quest_nb').val());">
+					OK
+				</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<div id="stepModal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add / edit step</h4>
+			</div>
+			<div class="modal-body">
+				<input id="step_is_added" value="false" style="display: none;" readonly>
+				<label for="step_name"><b>Name:</b></label>
+				<input id="step_name" class="form-control" type="text">
+				<div class="checkbox">
+					<label for="step_visiblity"><input type="checkbox" id="step_visiblity"> Is visible before success</label>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="designer.updateStep();">
 					OK
 				</button>
 			</div>
@@ -129,7 +210,7 @@
 	fileInput.addEventListener('change', function()
 	{
 		var reader = new FileReader();
-		reader.onload = function(e)
+		reader.onload = function()
 		{
 			designer = new Designer(event.target.result);
 		};
