@@ -2,11 +2,11 @@
 ** Dishi Quests System
 ** By Dishi
 ** QuestsSystem.js
-** Version 1.0
+** Version 1.1
 ** Free for commercial and non commercial use
 **-------------------------------------------------------------------------------------------*/
 /*:
-* @plugindesc v1.0 - A quests manager simple to use which allows you many customisation
+* @plugindesc v1.1 - A quests manager simple to use which allows you many customisation
 * @author Dishi
 *
 *
@@ -218,7 +218,7 @@
 ** Initialization
 **-------------------------------------------------------------------------------------------*/
 var QuestsSystem = QuestsSystem || {};
-QuestsSystem["version"] = 1.0;
+QuestsSystem["version"] = 1.1;
 QuestsSystem["name"] = "QuestsSystem";
 QuestsSystem["params"] = PluginManager.parameters("QuestsSystem");
 
@@ -247,42 +247,41 @@ questsSystemMenu = Scene_Menu.prototype.createCommandWindow;
 Game_Interpreter.prototype.pluginCommand = function(command, av)
 {
 	questsSystemModule.call(this, command, av);
-	if (command.toLowerCase() == QuestsSystem["params"]["Module Name"].toLowerCase())
+	if (command.toLowerCase() != QuestsSystem["params"]["Module Name"].toLowerCase())
+		return;
+	switch (av[0].toLowerCase())
 	{
-		switch (av[0].toLowerCase())
-		{
-			case "add":
-			$gameParty.addQuest(Number(av[1]));
-			break;
+		case "add":
+		$gameParty.addQuest(Number(av[1]));
+		break;
 
-			case "remove":
-			$gameParty.removeQuest(Number(av[1]));
-			break;
+		case "remove":
+		$gameParty.removeQuest(Number(av[1]));
+		break;
 
-			case "succeed":
-			$gameQuests.getQuest(Number(av[1])).succeed();
-			break;
+		case "succeed":
+		$gameQuests.getQuest(Number(av[1])).succeed();
+		break;
 
-			case "fail":
-			$gameQuests.getQuest(Number(av[1])).fail();
-			break;
+		case "fail":
+		$gameQuests.getQuest(Number(av[1])).fail();
+		break;
 
-			case "reset":
-			$gameQuests.getQuest(Number(av[1])).reset();
-			break;
+		case "reset":
+		$gameQuests.getQuest(Number(av[1])).reset();
+		break;
 
-			case "nextstep":
-			$gameQuests.getQuest(Number(av[1])).nextStep();
-			break;
+		case "nextstep":
+		$gameQuests.getQuest(Number(av[1])).nextStep();
+		break;
 
-			case "laststep":
-			$gameQuests.getQuest(Number(av[1])).lastStep();
-			break;
+		case "laststep":
+		$gameQuests.getQuest(Number(av[1])).lastStep();
+		break;
 
-			case "menu":
-			SceneManager.push(Scene_Quests);
-			break;
-		}
+		case "menu":
+		SceneManager.push(Scene_Quests);
+		break;
 	}
 };
 
@@ -494,7 +493,6 @@ Game_Quest.prototype.lastStep = function()
 
 Game_Quest.prototype.giveRewards = function()
 {
-	console.log("rewards given");
 	for (var i = 0; i < this.rewards.length; i++)
 	{
 		var r = this.rewards[i];
@@ -556,13 +554,23 @@ Game_Quests.prototype.initialize = function()
 	this.quests = [];
 }
 
+Game_Quests.prototype.getQuestFromId = function(questId)
+{
+	for (var i = 0; i < this.quests.length; i++)
+	{
+		if (this.quests[i].id == questId)
+			return (this.quests[i]);
+	}
+	return (null);
+}
+
 Game_Quests.prototype.getQuest = function(questId)
 {
 	if (!$dataQuests[questId])
 		return (null);
-	if (!this.quests[questId])
-		this.quests[questId] = new Game_Quest(questId);
-	return (this.quests[questId]);
+	if (!this.getQuestFromId(questId))
+		this.quests.push(new Game_Quest(questId));
+	return (this.getQuestFromId(questId));
 }
 
 /*---------------------------------------------------------------------------------------------
